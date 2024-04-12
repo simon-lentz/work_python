@@ -1,0 +1,14 @@
+{
+    "type": "BondIssuer",
+    "property_map": {
+        "issuerID": "MSRB Issuer Identifier",
+        "issuerName": "Issuer Name",
+        "issuerType": "Issuer Type",
+        "issuerLink": "Issuer Homepage",
+        "dateRetrieved": "Date Retrieved",
+        "stateAbbreviation": "State Abbreviation",
+        "stateFIPS": "State FIPS"
+    },
+    "association_map": {}
+  }
+  
