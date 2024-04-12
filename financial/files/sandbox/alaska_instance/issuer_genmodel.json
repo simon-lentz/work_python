@@ -1,0 +1,14 @@
+{
+    "type": "Issuer",
+    "property_map": {
+        "issuerName": "Issuer Name",
+        "msrbIssuerType": "Issuer Type",
+        "stateAbbreviation": "State Abbreviation",
+        "stateFIPS": "State FIPS",
+        "issuerHomepage": "Issuer Homepage",
+        "msrbIssuerIdentifier": "MSRB Issuer Identifier",
+        "dateRetrieved": "Date Retrieved"
+    },
+    "association_map": {}
+  }
+  
