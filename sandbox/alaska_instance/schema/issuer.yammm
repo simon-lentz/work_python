@@ -1,0 +1,13 @@
+/* composite schema used to generate a test instance for issuers */
+schema "Issuer_standalone"
+
+
+type Issuer {
+    issuerName String
+    issuerHomepage String
+    msrbIssuerIdentifier String primary
+    msrbIssuerType String
+    dateRetrieved String
+    stateAbbreviation String
+    stateFIPS String
+}

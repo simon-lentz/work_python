@@ -1,0 +1,24 @@
+/* composite schema used to generate a test instance for issuers */
+schema "Issuer_standalone"
+
+type Bond {
+      cusip String
+      securityDescription String
+      issueDescription String
+      maturityDate String
+      principal Float
+      coupon Float
+      offerPriceYieldRatio Float
+      offerPricePct Float
+      offerYieldPct Float
+      fitchRating String
+      kbraRating String
+      moodysRating String
+      spRating String
+      dateRetrieved String
+      securityHomepage String
+      msrbSecurityIdentifier String primary
+      msrbIssueIdentifier String
+      stateAbbreviation String
+      stateFIPS String
+}

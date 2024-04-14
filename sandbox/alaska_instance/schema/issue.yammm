@@ -1,0 +1,16 @@
+/* composite schema used to generate a test instance for issues */
+schema "Issue_standalone"
+
+type Issue {
+    issueDescription String
+    issueHomepage String
+    msrbIssueIdentifier String primary
+    datedDate String
+    maturityDate String
+    officialStatement String
+    dateRetrieved String
+    issuerName String
+    msrbIssuerIdentifier String
+    stateAbbreviation String
+    stateFIPS String
+}
