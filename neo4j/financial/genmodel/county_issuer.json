@@ -1,5 +1,5 @@
 {
-    "type": "Issuer",
+    "type": "CountyIssuer",
     "property_map": {
         "issuerName":"Issuer Name",
         "issuerHomepage":"Issuer Homepage",
@@ -7,8 +7,15 @@
         "msrbIssuerType":"Issuer Type",
         "dateRetrieved":"Date Retrieved",
         "stateAbbreviation":"State Abbreviation",
-        "stateFIPS":"State FIPS"
+        "stateFIPS":"State FIPS",
+        "countyName":"County Name",
+        "countyFIPS":"County FIPS"
     },
-    "association_map": {}
+    "association_map": {
+        "ISSUES_IN_County": {
+            "where": {
+                "countyFIPS":"County FIPS"
+            }
+        }
+    }
   }
-  

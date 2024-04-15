@@ -4,8 +4,9 @@ import numpy as np
 
 # Load in issue scale raw, coerce datatypes, add
 # error prefix "XXXX" to cusip if len(cusip) != 9
-# write to new ak_issue_scale.csv file
-issue_scale = os.path.join("./alaska_instance/ak_issue_scale_raw.csv")
+state_prefix = "ak"
+
+issue_scale = os.path.join(f"financial/data/{state_prefix}_bonds_raw.csv")
 
 # Read CSV files into DataFrames
 issue_scale_df = pd.read_csv(
@@ -27,12 +28,12 @@ issue_scale_df['CUSIP'] = np.where(issue_scale_df['CUSIP'].apply(len) != 9,
                                    issue_scale_df['CUSIP'])
 
 # Write the modified DataFrame to a new CSV file
-output_path = os.path.join("./alaska_instance/ak_issue_scale.csv")
+output_path = os.path.join(f"financial/data/{state_prefix}/bonds.csv")
 issue_scale_df.to_csv(output_path, index=False)
 
 # Load in and merge os docs and issues, output merged file
-issues = os.path.join("./alaska_instance/ak_issues_raw.csv")
-issue_os = os.path.join("./alaska_instance/ak_issue_os_raw.csv")
+issues = os.path.join(f"financial/data/{state_prefix}/issues_raw.csv")
+issue_os = os.path.join(f"financial/data/{state_prefix}/issue_os_raw.csv")
 
 issues_df = pd.read_csv(issues)
 issue_os_df = pd.read_csv(issue_os)
@@ -53,5 +54,5 @@ merged_df = merged_df[column_order]
 merged_df = merged_df.drop_duplicates(subset=['MSRB Issue Identifier'])
 
 # Write the merged DataFrame to a new CSV file
-output_path = os.path.join("./alaska_instance/ak_issues.csv")
+output_path = os.path.join(f"financial/data/{state_prefix}/issues.csv")
 merged_df.to_csv(output_path, index=False)

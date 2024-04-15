@@ -28,15 +28,9 @@ type City {
     --> LOCATED_IN (one:one) County
 }
 
-type CensusTract {
-    countyFIPS String 
-    countyName String
-    tractFIPS String primary 
+abstract type Issuer {}
 
-    --> LOCATED_IN (one:one) County
-}
-
-type Issuer {
+type StateIssuer extends Issuer {
     issuerName String
     issuerHomepage String
     msrbIssuerIdentifier String primary
@@ -44,6 +38,39 @@ type Issuer {
     dateRetrieved String
     stateAbbreviation String
     stateFIPS String
+
+    --> ISSUES_IN (one:one) State
+}
+
+type CountyIssuer extends Issuer {
+    issuerName String
+    issuerHomepage String
+    msrbIssuerIdentifier String primary
+    msrbIssuerType String
+    dateRetrieved String
+    stateAbbreviation String
+    stateFIPS String
+    countyName String
+    countyFIPS String
+
+    --> ISSUES_IN (one:one) County
+}
+
+type CityIssuer extends Issuer {
+    issuerName String
+    issuerHomepage String
+    msrbIssuerIdentifier String primary
+    msrbIssuerType String
+    dateRetrieved String
+    cbsaCode String primary
+    cbsaTitle String
+    csaTitle String
+    stateAbbreviation String
+    stateFIPS String
+    countyName String
+    countyFIPS String
+
+    --> ISSUES_IN (one:one) County
 }
 
 type Issue {

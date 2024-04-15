@@ -1,0 +1,22 @@
+{
+    "type": "CityIssuer",
+    "property_map": {
+        "issuerName":"Issuer Name",
+        "issuerHomepage":"Issuer Homepage",
+        "msrbIssuerIdentifier":"MSRB Issuer Identifier",
+        "msrbIssuerType":"Issuer Type",
+        "dateRetrieved":"Date Retrieved",
+        "stateAbbreviation":"State Abbreviation",
+        "stateFIPS":"State FIPS",
+        "cbsaCode":"CBSA Code",
+        "cbsaTitle":"CBSA Title",
+        "csaTitle":"CSA Title"
+    },
+    "association_map": {
+        "ISSUES_IN_City": {
+            "where": {
+                "cbsaCode":"CBSA Code"
+            }
+        }
+    }
+  }
