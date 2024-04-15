@@ -1,1 +1,4 @@
 .DS_Store
+neo4j/place/data
+neo4j/campaign/data
+neo4j/financial/data

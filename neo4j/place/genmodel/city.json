@@ -1,0 +1,20 @@
+{
+  "type": "City",
+  "property_map": {
+    "cbsaCode": "CBSA Code",
+    "cbsaTitle": "CBSA Title",
+    "csaTitle": "CSA Title",
+    "countyName": "County/County Equivalent",
+    "countyFIPS": "FIPS County Code",
+    "stateFIPS": "FIPS State Code",
+    "statisticalArea": "Metropolitan/Micropolitan Statistical Area",
+    "stateName": "State Name"
+  },
+  "association_map": {
+    "LOCATED_IN_County": {
+      "where": {
+        "countyFIPS": "FIPS County Code"
+      }
+    }
+  }
+}
