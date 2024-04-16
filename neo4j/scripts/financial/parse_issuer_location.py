@@ -30,7 +30,7 @@ def load_data(filepath: Path) -> pd.DataFrame:
         raise
 
 
-def prepare_place_data(state_abbr: str) -> pd.DataFrame:
+def prepare_city_place_data(state_abbr: str) -> pd.DataFrame:
     place_data = PLACE_DATA_DIR / state_abbr / "place_data.csv"
     place_df = load_data(place_data)
     place_df = place_df[["CBSA Code", "CBSA Title"]].dropna().drop_duplicates("CBSA Code").copy()
@@ -38,19 +38,19 @@ def prepare_place_data(state_abbr: str) -> pd.DataFrame:
     return place_df
 
 
-def prepare_city_issuer_data(state_abbr: str) -> pd.DataFrame:
+def prepare_city_issuer_data(state_abbr: str) -> tuple:
     # Load merged_city_issuers file
     city_issuers_file = FINANCIAL_DATA_DIR / state_abbr / "merged_city_issuers.csv"
     city_issuers_df = load_data(city_issuers_file)
+    city_issuers_original_df = city_issuers_df.copy()
 
     # Debug: print available columns
     logging.debug(f"Available columns in city_issuers_df: {city_issuers_df.columns.tolist()}")
 
     # Preprocess: Ensure no NaN values and apply lower case and stripping
-    city_issuers_df["Issue Description"] = city_issuers_df.get("Issue Description", "").fillna('').apply(lambda x: x.strip().lower())  # noqa:E501
     city_issuers_df["Issuer Name"] = city_issuers_df.get("Issuer Name", "").fillna('').apply(lambda x: x.strip().lower())  # noqa:E501
 
-    return city_issuers_df
+    return city_issuers_original_df, city_issuers_df
 
 
 def match_city_issuers(place_df: pd.DataFrame, city_issuers_df: pd.DataFrame) -> tuple:
@@ -66,22 +66,30 @@ def match_city_issuers(place_df: pd.DataFrame, city_issuers_df: pd.DataFrame) ->
     return matched_df
 
 
-def parse_city_issuers(state_abbr: str) -> None:
-    city_issuers_df = prepare_city_issuer_data(state_abbr)
-    place_df = prepare_place_data(state_abbr)
+def parse_city_issuers(state_abbr: str) -> pd.DataFrame:
+    city_original, city_issuers_df = prepare_city_issuer_data(state_abbr)
+    place_df = prepare_city_place_data(state_abbr)
     matched_df = match_city_issuers(place_df, city_issuers_df)
-
     # Ensure the DataFrame has expected columns before filtering
     expected_columns = ["Date Retrieved", "Issuer Name", "MSRB Issuer Identifier", "State Abbreviation", "State FIPS", "Issuer Homepage", "Issuer Type"]  # noqa:E501
     missing_columns = [col for col in expected_columns if col not in city_issuers_df.columns]
     if missing_columns:
         logging.error(f"Missing columns in city_issuers_df: {missing_columns}")
-        return  # Exit the function if required columns are missing
-
-    filtered_issuers_df = city_issuers_df[expected_columns].drop_duplicates(subset=['MSRB Issuer Identifier'])
+        return pd.DataFrame()  # Return an empty DataFrame to maintain return type consistency
+    filtered_issuers_df = city_original[expected_columns].drop_duplicates(subset=['MSRB Issuer Identifier'])
     output_df = pd.merge(matched_df, filtered_issuers_df, on="MSRB Issuer Identifier", how='left')
+    # Drop duplicates based on 'MSRB Issuer Identifier' to ensure each ID appears only once
+    output_df = output_df.drop_duplicates(subset=['MSRB Issuer Identifier'])
+    # Save the final matched DataFrame to CSV
     output_file = FINANCIAL_DATA_DIR / state_abbr / "city_issuers.csv"
     output_df.to_csv(output_file, index=False)
+    # Find set difference between original and matched issuer ids
+    unmatched_issuer_ids = set(filtered_issuers_df["MSRB Issuer Identifier"]) - set(matched_df["MSRB Issuer Identifier"])  # noqa:E501
+    # Filter city_original to get the DataFrame of unmatched issuers
+    unmatched_city_issuers_df = filtered_issuers_df[filtered_issuers_df["MSRB Issuer Identifier"].isin(unmatched_issuer_ids)]  # noqa:E501
+    # Ensure that unmatched DataFrame also does not have duplicate MSRB Issuer Identifiers
+    unmatched_city_issuers_df = unmatched_city_issuers_df.drop_duplicates(subset=['MSRB Issuer Identifier'])
+    return unmatched_city_issuers_df
 
 
 def parse_issuer_location(state_abbr: str):
@@ -91,7 +99,9 @@ def parse_issuer_location(state_abbr: str):
     other_merged_issuers_file = FINANCIAL_DATA_DIR / state_abbr / "merged_other_issuers.csv"
 
     if os.path.exists(city_merged_issuers_file):
-        parse_city_issuers(state_abbr)
+        unmatched_df = parse_city_issuers(state_abbr)
+        unmatched_output = FINANCIAL_DATA_DIR / state_abbr / "unmatched_city_issuers.csv"
+        unmatched_df.to_csv(unmatched_output, index=False)
     if os.path.exists(county_merged_issuers_file):
         # Implement similar logic for county issuers if necessary
         pass
