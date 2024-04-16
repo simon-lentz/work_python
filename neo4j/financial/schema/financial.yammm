@@ -28,12 +28,13 @@ type City {
     --> LOCATED_IN (one:one) County
 }
 
-abstract type Issuer {}
+abstract type Issuer {
+    msrbIssuerIdentifier String primary
+}
 
 type StateIssuer extends Issuer {
     issuerName String
     issuerHomepage String
-    msrbIssuerIdentifier String primary
     msrbIssuerType String
     dateRetrieved String
     stateAbbreviation String
@@ -70,7 +71,7 @@ type CityIssuer extends Issuer {
     countyName String
     countyFIPS String
 
-    --> ISSUES_IN (one:one) County
+    --> ISSUES_IN (one:one) City
 }
 
 type Issue {
