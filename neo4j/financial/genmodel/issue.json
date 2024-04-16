@@ -9,7 +9,7 @@
       "officialStatement":"Official Statement",
       "dateRetrieved":"Date Retrieved",
       "issuerName":"Issuer Name",
-      "msrbIssuerIdentifier":"MSRB Issuer Identifier",
+      "issuerID":"MSRB Issuer Identifier",
       "stateAbbreviation":"State Abbreviation",
       "stateFIPS":"State FIPS"
     },

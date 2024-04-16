@@ -32,34 +32,39 @@ type Issuer {
     msrbIssuerIdentifier String primary
 }
 
-type StateIssuer extends Issuer {
+type StateIssuer {
     issuerName String
     issuerHomepage String
+    issuerID String primary
     msrbIssuerType String
     dateRetrieved String
     stateAbbreviation String
     stateFIPS String
 
+    --> TYPE_OF (one:one) Issuer
     --> ISSUES_IN (one:one) State
 }
 
-type CountyIssuer extends Issuer {
+type CountyIssuer {
     issuerName String
     issuerHomepage String
     msrbIssuerType String
+    issuerID String primary
     dateRetrieved String
     stateAbbreviation String
     stateFIPS String
     countyName String
     countyFIPS String
 
+    --> TYPE_OF (one:one) Issuer
     --> ISSUES_IN (one:one) County
 }
 
-type CityIssuer extends Issuer {
+type CityIssuer {
     issuerName String
     issuerHomepage String
     msrbIssuerType String
+    issuerID String primary
     dateRetrieved String
     cbsaCode String primary
     cbsaTitle String
@@ -69,6 +74,7 @@ type CityIssuer extends Issuer {
     countyName String
     countyFIPS String
 
+    --> TYPE_OF (one:one) Issuer
     --> ISSUES_IN (one:one) City
 }
 
@@ -81,7 +87,7 @@ type Issue {
     officialStatement String
     dateRetrieved String
     issuerName String
-    msrbIssuerIdentifier String
+    issuerID String
     stateAbbreviation String
     stateFIPS String
 

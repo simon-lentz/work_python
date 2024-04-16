@@ -3,7 +3,7 @@
     "property_map": {
         "issuerName":"Issuer Name",
         "issuerHomepage":"Issuer Homepage",
-        "msrbIssuerIdentifier":"MSRB Issuer Identifier",
+        "issuerID":"MSRB Issuer Identifier",
         "msrbIssuerType":"Issuer Type",
         "dateRetrieved":"Date Retrieved",
         "stateAbbreviation":"State Abbreviation",
@@ -16,6 +16,11 @@
         "ISSUES_IN_City": {
             "where": {
                 "cbsaCode":"CBSA Code"
+            }
+        },
+        "TYPE_OF_Issuer": {
+            "where": {
+                "msrbIssuerIdentifier":"MSRB Issuer Identifier"
             }
         }
     }
