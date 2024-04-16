@@ -80,7 +80,7 @@ def merge_and_split_by_state():
         state_dir, merged_df = merge_financial_data(state_abbr)
         issuers_dict = split_by_type(merged_df)
         for k, v in issuers_dict.items():
-            output_name = state_dir / f"{str(k).lower()}_merged_issuers.csv"
+            output_name = state_dir / f"merged_{str(k).lower()}_issuers.csv"
             v.to_csv(output_name, index=False)
             logging.info(f"Saved {k} type issues for {state_abbr} to {output_name}.")
 

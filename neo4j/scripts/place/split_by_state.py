@@ -7,7 +7,6 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 
 # Constants
 PLACE_DATA_DIR = Path.cwd() / "neo4j" / "place" / "data"
-FINANCIAL_DATA_DIR = Path.cwd() / "neo4j" / "financial" / "data"
 STATE_LOCATORS = (("AK", "02"), ("AL", "01"))
 
 
@@ -53,7 +52,7 @@ def process_state_data(state_abbr: str, state_fips_code: str):
     counties_df = load_data(counties_path)
     cities_df = load_data(cities_path)
     merged_df = filter_and_merge_data(counties_df, cities_df, state_fips_code)
-    output_path = FINANCIAL_DATA_DIR / state_abbr / "place_data.csv"
+    output_path = PLACE_DATA_DIR / state_abbr / "place_data.csv"
     merged_df.to_csv(output_path, index=False)
     logging.info(f"Data for {state_abbr} processed and saved to {output_path}.")
 
