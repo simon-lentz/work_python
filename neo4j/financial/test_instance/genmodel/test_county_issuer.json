@@ -1,0 +1,21 @@
+{
+    "type": "CountyIssuer",
+    "property_map": {
+        "issuerName":"Issuer Name",
+        "issuerHomepage":"Issuer Homepage",
+        "issuerID":"MSRB Issuer Identifier",
+        "msrbIssuerType":"Issuer Type",
+        "dateRetrieved":"Date Retrieved",
+        "stateAbbreviation":"State Abbreviation",
+        "stateFIPS":"State FIPS",
+        "countyName":"County Name",
+        "countyFIPS":"County FIPS"
+    },
+    "association_map": {
+        "TYPE_OF_Issuer": {
+            "where": {
+                "msrbIssuerIdentifier":"MSRB Issuer Identifier"
+            }
+        }
+    }
+  }

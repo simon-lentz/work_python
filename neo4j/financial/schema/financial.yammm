@@ -28,7 +28,7 @@ type City {
     --> LOCATED_IN (one:one) County
 }
 
-abstract type Issuer {
+type Issuer {
     msrbIssuerIdentifier String primary
 }
 
@@ -46,7 +46,6 @@ type StateIssuer extends Issuer {
 type CountyIssuer extends Issuer {
     issuerName String
     issuerHomepage String
-    msrbIssuerIdentifier String primary
     msrbIssuerType String
     dateRetrieved String
     stateAbbreviation String
@@ -60,7 +59,6 @@ type CountyIssuer extends Issuer {
 type CityIssuer extends Issuer {
     issuerName String
     issuerHomepage String
-    msrbIssuerIdentifier String primary
     msrbIssuerType String
     dateRetrieved String
     cbsaCode String primary

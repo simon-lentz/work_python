@@ -1,0 +1,89 @@
+/* debug schema */
+schema "test"
+
+type Issuer {
+    msrbIssuerIdentifier String primary
+}
+
+type StateIssuer {
+    issuerName String
+    issuerHomepage String
+    issuerID String primary
+    msrbIssuerType String
+    dateRetrieved String
+    stateAbbreviation String
+    stateFIPS String
+
+    --> TYPE_OF (one:one) Issuer
+}
+
+type CountyIssuer {
+    issuerName String
+    issuerHomepage String
+    msrbIssuerType String
+    issuerID String primary
+    dateRetrieved String
+    stateAbbreviation String
+    stateFIPS String
+    countyName String
+    countyFIPS String
+
+    --> TYPE_OF (one:one) Issuer
+}
+
+type CityIssuer {
+    issuerName String
+    issuerHomepage String
+    msrbIssuerType String
+    issuerID String primary
+    dateRetrieved String
+    cbsaCode String primary
+    cbsaTitle String
+    csaTitle String
+    stateAbbreviation String
+    stateFIPS String
+    countyName String
+    countyFIPS String
+
+    --> TYPE_OF (one:one) Issuer
+}
+
+type Issue {
+    issueDescription String
+    issueHomepage String
+    msrbIssueIdentifier String primary
+    datedDate String
+    maturityDate String
+    officialStatement String
+    dateRetrieved String
+    issuerName String
+    issuerID String
+    stateAbbreviation String
+    stateFIPS String
+
+    --> ISSUED_BY (one:one) Issuer
+}
+
+type Bond {
+      cusip String
+      securityDescription String
+      issueDescription String
+      maturityDate String
+      principal Float
+      coupon Float
+      offerPriceYieldRatio Float
+      offerPricePct Float
+      offerYieldPct Float
+      fitchRating String
+      kbraRating String
+      moodysRating String
+      spRating String
+      dateRetrieved String
+      securityHomepage String
+      msrbSecurityIdentifier String primary
+      msrbIssueIdentifier String
+      stateAbbreviation String
+      stateFIPS String
+
+    --> COMPONENT_OF (one:one) Issue
+}
