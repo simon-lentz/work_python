@@ -1,5 +1,4 @@
 import logging
-import numpy as np
 import pandas as pd
 from pathlib import Path
 
@@ -26,69 +25,37 @@ def parse_dates(date):
     return pd.to_datetime(date, format='%d/%m/%Y')
 
 
-def load_bond_data(raw_bonds_file: Path) -> pd.DataFrame:
-    try:
-        # Read CSV files into DataFrames
-        bonds_df = pd.read_csv(
-            raw_bonds_file,
-            dtype={
-                "CUSIP": str,
-                "Security Homepage": str,
-                "MSRB Security Identifier": str,
-                "Principal at Issuance USD": float,
-                "Security Description": str,
-                "Coupon": float,
-                "Initial Offering Price/Yield (%)": float,
-                "Initial Offering Price (%)": float,
-                "Initial Offering Yield (%)": float,
-                "Fitch LT Rating": str,
-                "KBRA LT Rating": str,
-                "Moody's LT Rating": str,
-                "S&P LT Rating": str,
-                "Issue Description": str,
-                "MSRB Issue Identifier": str,
-                "State Abbreviation": str,
-                "State FIPS": str
-            },
-            parse_dates=['Maturity Date', 'Date Retrieved'],
-            date_parser=parse_dates,
-            na_values="-"
-        )
-        logging.info(f"Data loaded successfully from {raw_bonds_file}.")
-        return bonds_df
-    except FileNotFoundError:
-        logging.error(f"File not found at {raw_bonds_file}. Please verify the path.")
-        raise
-    except pd.errors.EmptyDataError:
-        logging.error(f"No data in file at {raw_bonds_file}.")
-        raise
-    except pd.errors.ParserError as e:
-        logging.error(f"Error parsing data from {raw_bonds_file}: {e}")
-        raise
-
-
-def filter_raw_bonds(bonds_df: pd.DataFrame) -> pd.DataFrame:
-    # Ensure 'CUSIP' is treated as string, then apply transformation
-    bonds_df['CUSIP'] = bonds_df['CUSIP'].astype(str)
-    bonds_df['CUSIP'] = np.where(bonds_df['CUSIP'].apply(len) != 9,
-                                 "XXXX" + bonds_df['CUSIP'],
-                                 bonds_df['CUSIP'])
-
-
-def sanitize_raw_bonds(state_abbr: str) -> None:
-    raw_bonds_file = FINANCIAL_DATA_DIR / state_abbr / "raw_bonds.csv"
-    raw_bonds_df = load_bond_data(raw_bonds_file)
-    bonds_df = filter_raw_bonds(raw_bonds_df)
-    output_path = FINANCIAL_DATA_DIR / state_abbr / "bonds.csv"
-    bonds_df.to_csv(output_path, index=False)
-
-
 def merge_issues(state_abbr: str) -> None:
     issues_raw_path = FINANCIAL_DATA_DIR / state_abbr / "issues_raw.csv"
     issue_os_path = FINANCIAL_DATA_DIR / state_abbr / "issue_os_raw.csv"
 
-    issues_df = pd.read_csv(issues_raw_path, dtype=str)
-    issue_os_df = pd.read_csv(issue_os_path, dtype=str)
+    issues_df = pd.read_csv(issues_raw_path,
+                            dtype={
+                                "Issue Description": str,
+                                "Issue Homepage": str,
+                                "MSRB Issue Identifier": str,
+                                "Official Statement": str,
+                                "Issuer Name": str,
+                                "MSRB Issuer Identifier": str,
+                                "State Abbreviation": str,
+                                "State FIPS": str
+                            },
+                            parse_dates=['Dated Date', 'Maturity Date', 'Date Retrieved'],
+                            date_parser=parse_dates
+                            )
+    issue_os_df = pd.read_csv(issue_os_path,
+                              dtype={
+                                  "Issue Homepage": str,
+                                  "MSRB Issue Identifier": str,
+                                  "Official Statement": str,
+                                  "MSRB Issuer Identifier": str,
+                                  "Issuer Name": str,
+                                  "State Abbreviation": str,
+                                  "State FIPS": str
+                              },
+                              parse_dates=['Date Retrieved'],
+                              date_parser=parse_dates
+                              )
 
     # Merge the DataFrames on the "MSRB Issue Identifier" column
     merged_df = pd.merge(issues_df, issue_os_df[['MSRB Issue Identifier', 'Official Statement']], on='MSRB Issue Identifier', how='left')  # noqa:E501
@@ -112,7 +79,6 @@ def merge_issues(state_abbr: str) -> None:
 
 def sanitize_by_state():
     for state_abbr, _ in STATE_LOCATORS:
-        sanitize_raw_bonds(state_abbr)
         merge_issues(state_abbr)
 
 
