@@ -62,6 +62,9 @@ def load_bond_data(raw_bonds_file: Path) -> pd.DataFrame:
     except pd.errors.EmptyDataError:
         logging.error(f"No data in file at {raw_bonds_file}.")
         raise
+    except pd.errors.ParserError as e:
+        logging.error(f"Error parsing data from {raw_bonds_file}: {e}")
+        raise
 
 
 def filter_raw_bonds(bonds_df: pd.DataFrame) -> pd.DataFrame:
