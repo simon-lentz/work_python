@@ -20,9 +20,9 @@ STATE_LOCATORS = (("AK", "02"), ("MS", "28"), ("AL", "01"), ("MT", "30"), ("AR",
                   ("WY", "56"))
 
 
-# Function to parse dates in the format 'DD/MM/YYYY'
+# Function to parse dates in the format 'MM/DD/YYYY'
 def parse_dates(date):
-    return pd.to_datetime(date, format='%d/%m/%Y')
+    return pd.to_datetime(date, format='%m/%d/%Y')
 
 
 def merge_issues(state_abbr: str) -> None:
@@ -41,7 +41,7 @@ def merge_issues(state_abbr: str) -> None:
                                 "State FIPS": str
                             },
                             parse_dates=['Dated Date', 'Date Retrieved'],
-                            date_parser=parse_dates
+                            date_format=parse_dates
                             )
     issue_os_df = pd.read_csv(issue_os_path,
                               dtype={
@@ -54,7 +54,7 @@ def merge_issues(state_abbr: str) -> None:
                                   "State FIPS": str
                               },
                               parse_dates=['Date Retrieved'],
-                              date_parser=parse_dates
+                              date_format=parse_dates
                               )
 
     # Merge the DataFrames on the "MSRB Issue Identifier" column
@@ -62,7 +62,7 @@ def merge_issues(state_abbr: str) -> None:
 
     # Reorder the columns
     column_order = [
-        'Issue Name', 'Issue Homepage', 'MSRB Issue Identifier',
+        'Issue Description', 'Issue Homepage', 'MSRB Issue Identifier',
         'Dated Date', 'Maturity Date', 'Official Statement',
         'Date Retrieved', 'Issuer Name', 'MSRB Issuer Identifier',
         'State Abbreviation', 'State FIPS'
