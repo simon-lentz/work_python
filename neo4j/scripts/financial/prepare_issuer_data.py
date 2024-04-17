@@ -21,6 +21,11 @@ STATE_LOCATORS = (("AK", "02"), ("MS", "28"), ("AL", "01"), ("MT", "30"), ("AR",
                   ("WY", "56"))
 
 
+# Function to parse dates in the format 'DD/MM/YYYY'
+def parse_dates(date):
+    return pd.to_datetime(date, format='%d/%m/%Y')
+
+
 def load_data(filepath: Path) -> pd.DataFrame:
     """
     Load data from a specified CSV file with all entries treated as strings.
@@ -28,6 +33,34 @@ def load_data(filepath: Path) -> pd.DataFrame:
     """
     try:
         df = pd.read_csv(filepath, dtype=str)
+        logging.info(f"Data loaded successfully from {filepath}.")
+        return df
+    except FileNotFoundError:
+        logging.error(f"File not found at {filepath}. Please verify the path.")
+        raise
+    except pd.errors.EmptyDataError:
+        logging.error(f"No data in file at {filepath}.")
+        raise
+
+
+def load_issuer_data(filepath: Path) -> pd.DataFrame:
+    """
+    Load data from a specified CSV file with all entries treated as strings.
+    Raises FileNotFoundError if the file is not found, pd.errors.EmptyDataError if the file is empty.
+    """
+    try:
+        df = pd.read_csv(filepath,
+                         dtype={
+                             "Issuer Name": str,
+                             "Issuer Homepage": str,
+                             "MSRB Issuer Identifier": str,
+                             "Issuer Type": str,
+                             "State Abbreviation": str,
+                             "State FIPS": str
+                         },
+                         parse_dates=['Date Retrieved'],
+                         date_parser=parse_dates
+                         )
         logging.info(f"Data loaded successfully from {filepath}.")
         return df
     except FileNotFoundError:
@@ -53,7 +86,7 @@ def merge_financial_data(state_abbr: str) -> tuple:
         issues_path = FINANCIAL_DATA_DIR / state_abbr / "issues.csv"
         issuers_path = FINANCIAL_DATA_DIR / state_abbr / "issuers.csv"
         issues_df = load_data(issues_path)
-        issuers_df = load_data(issuers_path)
+        issuers_df = load_issuer_data(issuers_path)
         merged_df = pd.merge(issues_df, issuers_df, on='MSRB Issuer Identifier', how='left')
         # Drop columns that end with '_y'
         merged_df = merged_df[[col for col in merged_df.columns if not col.endswith('_y')]]
