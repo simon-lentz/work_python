@@ -34,13 +34,13 @@ def merge_issues(state_abbr: str) -> None:
                                 "Issue Description": str,
                                 "Issue Homepage": str,
                                 "MSRB Issue Identifier": str,
-                                "Official Statement": str,
                                 "Issuer Name": str,
+                                "Maturity Date": str,
                                 "MSRB Issuer Identifier": str,
                                 "State Abbreviation": str,
                                 "State FIPS": str
                             },
-                            parse_dates=['Dated Date', 'Maturity Date', 'Date Retrieved'],
+                            parse_dates=['Dated Date', 'Date Retrieved'],
                             date_parser=parse_dates
                             )
     issue_os_df = pd.read_csv(issue_os_path,
