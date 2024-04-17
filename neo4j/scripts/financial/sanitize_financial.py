@@ -21,19 +21,39 @@ STATE_LOCATORS = (("AK", "02"), ("MS", "28"), ("AL", "01"), ("MT", "30"), ("AR",
                   ("WY", "56"))
 
 
+# Function to parse dates in the format 'DD/MM/YYYY'
+def parse_dates(date):
+    return pd.to_datetime(date, format='%d/%m/%Y')
+
+
 def load_bond_data(raw_bonds_file: Path) -> pd.DataFrame:
     try:
         # Read CSV files into DataFrames
         bonds_df = pd.read_csv(
             raw_bonds_file,
             dtype={
+                "CUSIP": str,
+                "Security Homepage": str,
+                "MSRB Security Identifier": str,
                 "Principal at Issuance USD": float,
+                "Security Description": str,
                 "Coupon": float,
                 "Initial Offering Price/Yield (%)": float,
                 "Initial Offering Price (%)": float,
-                "Initial Offering Yield (%)": float
+                "Initial Offering Yield (%)": float,
+                "Fitch LT Rating": str,
+                "KBRA LT Rating": str,
+                "Moody's LT Rating": str,
+                "S&P LT Rating": str,
+                "Issue Description": str,
+                "MSRB Issue Identifier": str,
+                "State Abbreviation": str,
+                "State FIPS": str
             },
-            na_values="-")
+            parse_dates=['Maturity Date', 'Date Retrieved'],
+            date_parser=parse_dates,
+            na_values="-"
+        )
         logging.info(f"Data loaded successfully from {raw_bonds_file}.")
         return bonds_df
     except FileNotFoundError:
