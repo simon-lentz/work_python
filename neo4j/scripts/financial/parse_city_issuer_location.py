@@ -13,7 +13,6 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 # Constants
 FINANCIAL_DATA_DIR = Path.cwd() / "neo4j" / "financial" / "data"
 PLACE_DATA_DIR = Path.cwd() / "neo4j" / "place" / "data"
-ISSUER_TYPES = ("City", "County", "Other")
 STATE_LOCATORS = (("AK", "02"), ("MS", "28"), ("AL", "01"), ("MT", "30"), ("AR", "05"),
                   ("NC", "37"), ("ND", "38"), ("AZ", "04"), ("NE", "31"), ("CA", "06"),
                   ("NH", "33"), ("CO", "08"), ("NJ", "34"), ("CT", "09"), ("NM", "35"),
@@ -102,27 +101,21 @@ def parse_city_issuers(state_abbr: str) -> pd.DataFrame:
     return unmatched_city_issuers_df
 
 
-def parse_issuer_location(state_abbr: str):
+def parse_city_issuer_location(state_abbr: str):
     # construct file paths
     city_merged_issuers_file = FINANCIAL_DATA_DIR / state_abbr / "merged_city_issuers.csv"
-    county_merged_issuers_file = FINANCIAL_DATA_DIR / state_abbr / "merged_county_issuers.csv"
-    other_merged_issuers_file = FINANCIAL_DATA_DIR / state_abbr / "merged_other_issuers.csv"
 
     if os.path.exists(city_merged_issuers_file):
         unmatched_df = parse_city_issuers(state_abbr)
         unmatched_output = FINANCIAL_DATA_DIR / state_abbr / "unmatched_city_issuers.csv"
         unmatched_df.to_csv(unmatched_output, index=False)
-    if os.path.exists(county_merged_issuers_file):
-        # Implement similar logic for county issuers if necessary
-        pass
-    if os.path.exists(other_merged_issuers_file):
-        # Implement similar logic for other issuers if necessary
-        pass
+    else:
+        logging.info(f"No City issuers found for {state_abbr}")
 
 
 def parse_by_state():
     for state_abbr, _ in STATE_LOCATORS:
-        parse_issuer_location(state_abbr)
+        parse_city_issuer_location(state_abbr)
 
 
 parse_by_state()
