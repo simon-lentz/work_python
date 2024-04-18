@@ -23,24 +23,7 @@ STATE_LOCATORS = (("AK", "02"), ("MS", "28"), ("AL", "01"), ("MT", "30"), ("AR",
 
 # Function to parse dates in the format 'DD/MM/YYYY'
 def parse_dates(date):
-    return pd.to_datetime(date, format='%d/%m/%Y')
-
-
-def load_data(filepath: Path) -> pd.DataFrame:
-    """
-    Load data from a specified CSV file with all entries treated as strings.
-    Raises FileNotFoundError if the file is not found, pd.errors.EmptyDataError if the file is empty.
-    """
-    try:
-        df = pd.read_csv(filepath, dtype=str)
-        logging.info(f"Data loaded successfully from {filepath}.")
-        return df
-    except FileNotFoundError:
-        logging.error(f"File not found at {filepath}. Please verify the path.")
-        raise
-    except pd.errors.EmptyDataError:
-        logging.error(f"No data in file at {filepath}.")
-        raise
+    return pd.to_datetime(date, format='%m/%d/%Y')
 
 
 def load_issuer_data(filepath: Path) -> pd.DataFrame:
@@ -59,22 +42,52 @@ def load_issuer_data(filepath: Path) -> pd.DataFrame:
                              "State FIPS": str
                          },
                          parse_dates=['Date Retrieved'],
-                         date_parser=parse_dates
+                         date_format=parse_dates
                          )
         logging.info(f"Data loaded successfully from {filepath}.")
         return df
     except FileNotFoundError:
         logging.error(f"File not found at {filepath}. Please verify the path.")
-        raise
     except pd.errors.EmptyDataError:
         logging.error(f"No data in file at {filepath}.")
-        raise
+
+
+def load_issue_data(filepath: Path) -> pd.DataFrame:
+    """
+    Load data from a specified CSV file with all entries treated as strings.
+    Raises FileNotFoundError if the file is not found, pd.errors.EmptyDataError if the file is empty.
+    """
+    try:
+        df = pd.read_csv(filepath,
+                         dtype={
+                             "Issue Description": str,
+                             "Issue Homepage": str,
+                             "MSRB Issue Identifier": str,
+                             'Maturity Date': str,
+                             "Official Statement": str,
+                             "Issuer Name": str,
+                             "MSRB Issuer Identifier": str,
+                             "State Abbreviation": str,
+                             "State FIPS": str
+                         },
+                         parse_dates=['Dated Date', 'Date Retrieved'],
+                         date_format=parse_dates
+                         )
+        logging.info(f"Data loaded successfully from {filepath}.")
+        return df
+    except FileNotFoundError:
+        logging.error(f"File not found at {filepath}. Please verify the path.")
+    except pd.errors.EmptyDataError:
+        logging.error(f"No data in file at {filepath}.")
 
 
 def create_state_issuers(state_dir: Path, issuers_df: pd.DataFrame):
-    state_issuers_df = issuers_df[issuers_df["Issuer Type"] == "State"]
-    output_path = state_dir / "state_issuers.csv"
-    state_issuers_df.to_csv(output_path, index=False)
+    try:
+        state_issuers_df = issuers_df[issuers_df["Issuer Type"] == "State"]
+        output_path = state_dir / "state_issuers.csv"
+        state_issuers_df.to_csv(output_path, index=False)
+    except Exception:
+        logging.error("No State issuers found.")
 
 
 def merge_financial_data(state_abbr: str) -> tuple:
@@ -85,7 +98,7 @@ def merge_financial_data(state_abbr: str) -> tuple:
     try:
         issues_path = FINANCIAL_DATA_DIR / state_abbr / "issues.csv"
         issuers_path = FINANCIAL_DATA_DIR / state_abbr / "issuers.csv"
-        issues_df = load_data(issues_path)
+        issues_df = load_issue_data(issues_path)
         issuers_df = load_issuer_data(issuers_path)
         merged_df = pd.merge(issues_df, issuers_df, on='MSRB Issuer Identifier', how='left')
         # Drop columns that end with '_y'
@@ -97,7 +110,6 @@ def merge_financial_data(state_abbr: str) -> tuple:
         return state_dir, merged_df
     except KeyError as ke:
         logging.error(f"Key error in merging data: {ke}")
-        raise
 
 
 def split_by_type(merged_issues_df: pd.DataFrame) -> dict:
