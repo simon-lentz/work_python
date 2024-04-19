@@ -13,7 +13,17 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 # Constants
 FINANCIAL_DATA_DIR = Path.cwd() / "neo4j" / "financial" / "data"
 PLACE_DATA_DIR = Path.cwd() / "neo4j" / "place" / "data"
-STATE_LOCATORS = (("AL", "01"), ("AR", "05"), ("AZ", "04"))
+STATE_LOCATORS = (("AK", "02"), ("MS", "28"), ("AL", "01"), ("MT", "30"), ("AR", "05"),
+                  ("NC", "37"), ("ND", "38"), ("AZ", "04"), ("NE", "31"), ("CA", "06"),
+                  ("NH", "33"), ("CO", "08"), ("NJ", "34"), ("CT", "09"), ("NM", "35"),
+                  ("DC", "11"), ("NV", "32"), ("DE", "10"), ("NY", "36"), ("FL", "12"),
+                  ("OH", "39"), ("GA", "13"), ("OK", "40"), ("OR", "41"), ("HI", "15"),
+                  ("PA", "42"), ("IA", "19"), ("ID", "16"), ("RI", "44"), ("IL", "17"),
+                  ("SC", "45"), ("IN", "18"), ("SD", "46"), ("KS", "20"), ("TN", "47"),
+                  ("KY", "21"), ("TX", "48"), ("LA", "22"), ("UT", "49"), ("MA", "25"),
+                  ("VA", "51"), ("MD", "24"), ("ME", "23"), ("VT", "50"), ("MI", "26"),
+                  ("WA", "53"), ("MN", "27"), ("WI", "55"), ("MO", "29"), ("WV", "54"),
+                  ("WY", "56"))
 
 
 # Function to parse dates in the format 'MM/DD/YYYY'
@@ -214,7 +224,11 @@ def parse_city_issuers(state_abbr: str) -> None:
 def parse_city_issuer_location(state_abbr: str):
     # construct file paths
     city_merged_issuers_file = FINANCIAL_DATA_DIR / state_abbr / "merged_city_issuers.csv"
-
+    city_issuers_file = FINANCIAL_DATA_DIR / state_abbr / "city_issuers.csv"
+    # if city issuers have been processed, skip
+    if os.path.exists(city_issuers_file):
+        logging.info(f"City Issuers already processed for {state_abbr}")
+        return
     # if city issuers exist for state, parse them
     if os.path.exists(city_merged_issuers_file):
         parse_city_issuers(state_abbr)

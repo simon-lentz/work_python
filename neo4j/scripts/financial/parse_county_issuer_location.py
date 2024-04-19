@@ -14,7 +14,17 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 # Constants
 FINANCIAL_DATA_DIR = Path.cwd() / "neo4j" / "financial" / "data"
 PLACE_DATA_DIR = Path.cwd() / "neo4j" / "place" / "data"
-STATE_LOCATORS = (("AL", "01"), ("AR", "05"), ("AZ", "04"))
+STATE_LOCATORS = (("AK", "02"), ("MS", "28"), ("AL", "01"), ("MT", "30"), ("AR", "05"),
+                  ("NC", "37"), ("ND", "38"), ("AZ", "04"), ("NE", "31"), ("CA", "06"),
+                  ("NH", "33"), ("CO", "08"), ("NJ", "34"), ("CT", "09"), ("NM", "35"),
+                  ("DC", "11"), ("NV", "32"), ("DE", "10"), ("NY", "36"), ("FL", "12"),
+                  ("OH", "39"), ("GA", "13"), ("OK", "40"), ("OR", "41"), ("HI", "15"),
+                  ("PA", "42"), ("IA", "19"), ("ID", "16"), ("RI", "44"), ("IL", "17"),
+                  ("SC", "45"), ("IN", "18"), ("SD", "46"), ("KS", "20"), ("TN", "47"),
+                  ("KY", "21"), ("TX", "48"), ("LA", "22"), ("UT", "49"), ("MA", "25"),
+                  ("VA", "51"), ("MD", "24"), ("ME", "23"), ("VT", "50"), ("MI", "26"),
+                  ("WA", "53"), ("MN", "27"), ("WI", "55"), ("MO", "29"), ("WV", "54"),
+                  ("WY", "56"))
 
 
 # Function to parse dates in the format 'MM/DD/YYYY'
@@ -81,10 +91,18 @@ def prepare_county_place_data(state_abbr: str) -> tuple:
     original_place_df = place_df.copy()
     place_df = place_df[['County Name', 'County FIPS']]
     matching_set = []
+
+    # Function to replace non-alphanumeric characters with spaces
+    def clean_text(text):
+        # Replace non-alphanumeric characters with spaces
+        return re.sub(r'[^a-zA-Z0-9\s]', ' ', text).strip().lower()
+
     for _, entry in place_df.iterrows():
-        name = entry['County Name']
+        full_name = clean_text(entry['County Name'].strip().lower())
+        # Remove "county" and any other common suffixes and strip again
+        abbreviated_name = ' '.join(part for part in full_name.split() if part != 'county').strip()
         fips = entry['County FIPS']
-        match_tuple = (name, fips)
+        match_tuple = (full_name, clean_text(abbreviated_name), fips)
         matching_set.append(match_tuple)
 
     return original_place_df, matching_set
@@ -111,25 +129,27 @@ def prepare_county_issuer_data(state_abbr: str) -> tuple:
 
 
 def match_issuers(matching_set: List[tuple], county_issuers_df: pd.DataFrame) -> pd.DataFrame:
-    # Initialize an empty DataFrame for matched issuers
-    matched_columns = ['MSRB Issuer Identifier', 'County FIPS']
-    matched_df = pd.DataFrame(columns=matched_columns)
+    matches = []
 
-    # Iterate over each issuer and match based on the place names in the matching map
     for _, issuer in county_issuers_df.iterrows():
         issuer_name = issuer['Issuer Name']
         issue_description = issuer['Issue Description']
-        for county_name, county_fips in matching_set:
-            # Check if county name is a substring of the issuer name or issue description
-            if county_name in issuer_name or county_name in issue_description:
-                match = pd.DataFrame({
-                    'MSRB Issuer Identifier': [issuer['MSRB Issuer Identifier']],
-                    'County FIPS': [county_fips]
+        for full_name, abbreviated_name, county_fips in matching_set:
+            # First try to match using the full county name in either issuer name or issue description
+            if full_name in issuer_name or full_name in issue_description:
+                matches.append({
+                    'MSRB Issuer Identifier': issuer['MSRB Issuer Identifier'],
+                    'County FIPS': county_fips
                 })
-                matched_df = pd.concat([matched_df, match], ignore_index=True)
-                # If only the first match is needed, uncomment the next line:
-                # break
-
+                break  # Move to the next issuer after a successful match
+            # If no match found with full name, check using the abbreviated name
+            elif abbreviated_name in issuer_name or abbreviated_name in issue_description:
+                matches.append({
+                    'MSRB Issuer Identifier': issuer['MSRB Issuer Identifier'],
+                    'County FIPS': county_fips
+                })
+                break  # Move to the next issuer after a successful match
+    matched_df = pd.DataFrame(matches)
     return matched_df
 
 
@@ -162,10 +182,10 @@ def merge_dfs(matched: pd.DataFrame, place: pd.DataFrame, issuers: pd.DataFrame)
 def parse_county_issuers(state_abbr: str) -> None:
     # Load and filter input data
     original_county_issuer_df, county_issuers_df = prepare_county_issuer_data(state_abbr)
-    original_place_df, matching_map = prepare_county_place_data(state_abbr)
+    original_place_df, matching_set = prepare_county_place_data(state_abbr)
 
     # Use matching map and filtered issuers df to create a matched county issuers df
-    matched_county_issuers_df = match_issuers(matching_map, county_issuers_df)
+    matched_county_issuers_df = match_issuers(matching_set, county_issuers_df)
 
     # Merge matched and original data
     merged_df = merge_dfs(matched_county_issuers_df, original_place_df, original_county_issuer_df)
@@ -190,7 +210,11 @@ def parse_county_issuers(state_abbr: str) -> None:
 def parse_county_issuer_location(state_abbr: str):
     # construct file paths
     county_merged_issuers_file = FINANCIAL_DATA_DIR / state_abbr / "merged_county_issuers.csv"
-
+    county_issuers_file = FINANCIAL_DATA_DIR / state_abbr / "county_issuers.csv"
+    # if county issuers have already been parsed, skip
+    if os.path.exists(county_issuers_file):
+        logging.info(f"County Issuers already processed for {state_abbr}")
+        return
     # if county issuers exist for state, parse them
     if os.path.exists(county_merged_issuers_file):
         parse_county_issuers(state_abbr)
