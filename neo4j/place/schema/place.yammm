@@ -18,12 +18,12 @@ type County {
 type City {
     cbsaCode String primary
     cbsaTitle String
+    metroDivisionTitle String
     csaTitle String
     stateName String
     stateFIPS String
     countyName String
     countyFIPS String
-    statisticalArea String
 
     --> LOCATED_IN (one:one) County
 }

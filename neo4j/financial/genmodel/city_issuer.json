@@ -8,9 +8,12 @@
         "dateRetrieved":"Date Retrieved",
         "stateAbbreviation":"State Abbreviation",
         "stateFIPS":"State FIPS",
+        "countyName":"County Name",
+        "countyFIPS":"County FIPS",
         "cbsaCode":"CBSA Code",
         "cbsaTitle":"CBSA Title",
-        "csaTitle":"CSA Title"
+        "csaTitle":"CSA Title",
+        "metroDivisionTitle":"Metropolitan Division Title"
     },
     "association_map": {
         "ISSUES_IN_City": {

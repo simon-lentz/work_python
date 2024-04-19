@@ -69,6 +69,7 @@ type CityIssuer {
     cbsaCode String primary
     cbsaTitle String
     csaTitle String
+    metroDivisionTitle String
     stateAbbreviation String
     stateFIPS String
     countyName String

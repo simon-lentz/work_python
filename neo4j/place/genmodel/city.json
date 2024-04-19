@@ -3,11 +3,11 @@
   "property_map": {
     "cbsaCode": "CBSA Code",
     "cbsaTitle": "CBSA Title",
+    "metroDivisionTitle":"Metropolitan Division Title",
     "csaTitle": "CSA Title",
     "countyName": "County/County Equivalent",
     "countyFIPS": "County FIPS",
     "stateFIPS": "State FIPS",
-    "statisticalArea": "Metropolitan/Micropolitan Statistical Area",
     "stateName": "State Name"
   },
   "association_map": {
