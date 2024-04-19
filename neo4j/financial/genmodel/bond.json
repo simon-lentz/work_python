@@ -17,9 +17,7 @@
       "dateRetrieved":"Date Retrieved",
       "securityHomepage":"Security Homepage",
       "msrbSecurityIdentifier":"MSRB Security Identifier",
-      "msrbIssueIdentifier":"MSRB Issue Identifier",
-      "stateAbbreviation":"State Abbreviation",
-      "stateFIPS":"State FIPS"
+      "msrbIssueIdentifier":"MSRB Issue Identifier"
     },
     "association_map": {
       "COMPONENT_OF_Issue": {

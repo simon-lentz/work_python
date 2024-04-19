@@ -1,4 +1,5 @@
 import os
+import re
 import logging
 import pandas as pd
 from pathlib import Path
@@ -25,7 +26,7 @@ STATE_LOCATORS = (("AK", "02"), ("MS", "28"), ("AL", "01"), ("MT", "30"), ("AR",
                   ("WY", "56"))
 
 
-# Function to parse dates in the format 'DD/MM/YYYY'
+# Function to parse dates in the format 'MM/DD/YYYY'
 def parse_dates(date):
     return pd.to_datetime(date, format='%m/%d/%Y')
 
@@ -119,13 +120,20 @@ def prepare_city_issuer_data(state_abbr: str) -> tuple:
     city_issuers_original_df = city_issuers_df.copy()
 
     # Filter and preprocess
-    city_issuers_df = city_issuers_df[['MSRB Issuer Identifier', 'Issuer Name']].fillna('')
-    city_issuers_df['Issuer Name'] = city_issuers_df['Issuer Name'].apply(lambda x: x.strip().lower())
+    city_issuers_df = city_issuers_df[['MSRB Issuer Identifier', 'Issuer Name', 'Issue Description']].fillna('')
+
+    # Function to replace non-alphanumeric characters with spaces
+    def clean_text(text):
+        # Replace non-alphanumeric characters with spaces
+        return re.sub(r'[^a-zA-Z0-9\s]', ' ', text).strip().lower()
+
+    city_issuers_df['Issuer Name'] = city_issuers_df['Issuer Name'].apply(clean_text)
+    city_issuers_df['Issue Description'] = city_issuers_df['Issue Description'].apply(clean_text)
 
     return city_issuers_original_df, city_issuers_df
 
 
-def match_city_issuers(matching_map: dict, city_issuers_df: pd.DataFrame) -> pd.DataFrame:
+def match_issuers(matching_map: dict, city_issuers_df: pd.DataFrame) -> pd.DataFrame:
     # Initialize an empty DataFrame for matched issuers
     matched_columns = ['MSRB Issuer Identifier', 'CBSA Code']
     matched_df = pd.DataFrame(columns=matched_columns)
@@ -133,9 +141,17 @@ def match_city_issuers(matching_map: dict, city_issuers_df: pd.DataFrame) -> pd.
     # Iterate over each issuer and match based on the place names in the matching map
     for index, issuer in city_issuers_df.iterrows():
         issuer_name = issuer['Issuer Name']
+        issue_description = issuer['Issue Description']
         for cbsa_code, places in matching_map.items():
             # Check if any place name from the matching map is a substring of the issuer name
             if any(place in issuer_name for place in places):
+                match = pd.DataFrame({
+                    'MSRB Issuer Identifier': [issuer['MSRB Issuer Identifier']],
+                    'CBSA Code': [cbsa_code]
+                })
+                matched_df = pd.concat([matched_df, match], ignore_index=True)
+                continue
+            elif any(place in issue_description for place in places):
                 match = pd.DataFrame({
                     'MSRB Issuer Identifier': [issuer['MSRB Issuer Identifier']],
                     'CBSA Code': [cbsa_code]
@@ -145,19 +161,12 @@ def match_city_issuers(matching_map: dict, city_issuers_df: pd.DataFrame) -> pd.
     return matched_df
 
 
-def parse_city_issuers(state_abbr: str) -> None:
-    # Load and filter input data
-    original_city_issuer_df, city_issuers_df = prepare_city_issuer_data(state_abbr)
-    original_place_df, matching_map = prepare_city_place_data(state_abbr)
-
-    # Use matching map and filtered issuers df to create a matched city issuers df
-    matched_city_issuers_df = match_city_issuers(matching_map, city_issuers_df)
-
+def merge_dfs(matched: pd.DataFrame, place: pd.DataFrame, issuers: pd.DataFrame) -> pd.DataFrame:
     # Merge the matched df on "CBSA Code" with the original place df
-    merged_with_place = pd.merge(matched_city_issuers_df, original_place_df, on="CBSA Code", how="left")
+    merged_with_place = pd.merge(matched, place, on="CBSA Code", how="left")
 
     # Then merge again on "MSRB Issuer Identifier" with original city issuer df
-    final_merged_df = pd.merge(merged_with_place, original_city_issuer_df, on="MSRB Issuer Identifier", how="left")
+    final_merged_df = pd.merge(merged_with_place, issuers, on="MSRB Issuer Identifier", how="left")
 
     # Rename 'State FIPS_x' to 'State FIPS' if it exists
     if 'State FIPS_x' in final_merged_df.columns:
@@ -176,20 +185,32 @@ def parse_city_issuers(state_abbr: str) -> None:
     # Drop duplicate issuer ids
     final_merged_df = final_merged_df.drop_duplicates(subset="MSRB Issuer Identifier")
 
+    return final_merged_df
+
+
+def parse_city_issuers(state_abbr: str) -> None:
+    # Load and filter input data
+    original_city_issuer_df, city_issuers_df = prepare_city_issuer_data(state_abbr)
+    original_place_df, matching_map = prepare_city_place_data(state_abbr)
+
+    # Use matching map and filtered issuers df to create a matched city issuers df
+    matched_city_issuers_df = match_issuers(matching_map, city_issuers_df)
+
+    # Merge matched and original data
+    merged_df = merge_dfs(matched_city_issuers_df, original_place_df, original_city_issuer_df)
+
     # Output final merged DataFrame to CSV
     output_file = FINANCIAL_DATA_DIR / state_abbr / "city_issuers.csv"
-    final_merged_df.to_csv(output_file, index=False)
-    logging.info(f"Final matched city issuers data written to {output_file}")
+    merged_df.to_csv(output_file, index=False)
+    logging.info(f"Matched city issuers data written to {output_file}")
 
     # Find difference of set of matched issuer ids and original input issuer ids
     matched_ids = set(matched_city_issuers_df['MSRB Issuer Identifier'])
     original_ids = set(original_city_issuer_df['MSRB Issuer Identifier'])
-    unmatched_ids = original_ids - matched_ids
+    unmatched_ids = original_ids.difference(matched_ids)
 
-    # Filter original with this difference to create a df of unmatched issuers
     unmatched_issuers_df = original_city_issuer_df[original_city_issuer_df['MSRB Issuer Identifier'].isin(unmatched_ids)]  # noqa:E501
 
-    # Output as unmatched_city_issuers.csv
     unmatched_output_file = FINANCIAL_DATA_DIR / state_abbr / "unmatched_city_issuers.csv"
     unmatched_issuers_df.to_csv(unmatched_output_file, index=False)
     logging.info(f"Unmatched city issuers data written to {unmatched_output_file}")

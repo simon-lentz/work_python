@@ -19,11 +19,11 @@ type City {
     cbsaCode String primary
     cbsaTitle String
     csaTitle String
+    metroDivisionTitle String
     stateName String
     stateFIPS String
     countyName String
     countyFIPS String
-    statisticalArea String
 
     --> LOCATED_IN (one:one) County
 }
@@ -113,8 +113,6 @@ type Bond {
       securityHomepage String
       msrbSecurityIdentifier String primary
       msrbIssueIdentifier String
-      stateAbbreviation String
-      stateFIPS String
 
     --> COMPONENT_OF (one:one) Issue
 }
