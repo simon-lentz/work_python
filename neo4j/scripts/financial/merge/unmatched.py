@@ -77,9 +77,9 @@ def merge_issues(state_abbr: str) -> None:
     merged_df.to_csv(output_path, index=False)
 
 
-def sanitize_by_state():
+def merge_by_state():
     for state_abbr, _ in STATE_LOCATORS:
         merge_issues(state_abbr)
 
 
-sanitize_by_state()
+merge_by_state()
