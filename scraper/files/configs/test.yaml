@@ -1,0 +1,44 @@
+Logging:
+  log_directory: "./files/logs"
+  log_level: "INFO"
+  log_format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  log_max_size: "10MB"
+
+Proxy:
+  input_file: ./files/proxies/proxy_pool.txt
+  test_url: "https://httpbin.org/ip"
+  usage_limit: 200
+  validation: True
+  proxy_type: "HTTP"
+
+Docker:
+  ports: [4444]
+  container_shm_size: "2g"
+  container_image: "seleniarm/standalone-firefox:latest"
+  remove_on_cleanup: False
+  environment:
+    TZ: "Europe/Berlin"
+  network_mode: "bridge"
+  resource_limits:
+    cpu_quota: "0.5"
+    memory_limit: "1g"
+
+Driver:
+  host_network: "http://localhost"
+  option_args: ["--headless", "--width=1920", "--height=1080"]
+  proxy: True
+  retry_attempts: 3
+  retry_interval: 2
+  user_agent: "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.164 Safari/537.36"
+
+Target:
+  - name: "test"
+    domain: "https://www.scrapethissite.com/"
+    composite: False
+    input_file: "./files/data/input/test/countries.txt"
+    extractions: 
+      - type: "source"
+        locator: "dupe"
+        locator_type: "xpath"
+        output_type: "csv"
+        output_file: "./files/data/output/test/countries.csv"

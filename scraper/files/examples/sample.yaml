@@ -1,0 +1,76 @@
+Logging:
+  log_directory: "./files/logs"
+  log_level: "INFO"
+  log_format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  log_max_size: "10MB"
+
+Proxy:
+  input_file: ./files/proxies/proxy_pool.txt
+  test_url: "https://httpbin.org/ip"
+  usage_limit: 200
+  validation: True
+  proxy_type: "HTTP"
+
+Docker:
+  ports: [4444, 4445]
+  container_shm_size: "2g"
+  container_image: "seleniarm/standalone-firefox:latest"
+  remove_on_cleanup: True
+  environment:
+    TZ: "Europe/Berlin"
+  network_mode: "bridge"
+  resource_limits:
+    cpu_quota: "0.5"
+    memory_limit: "1g"
+
+Driver:
+  host_network: "http://localhost"
+  option_args: ["--headless", "--width=1920", "--height=1080"]
+  proxy: True
+  retry_attempts: 3
+  retry_interval: 2
+  user_agent: "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.164 Safari/537.36"
+
+Target:
+  - name: "countries"
+    domain: "https://www.scrapethissite.com/"
+    input_file: "./files/data/input/countries.txt"
+    extractions: 
+      - type: "element"
+        locator: ".col-md-4.country"
+        locator_type: "CSS_SELECTOR"
+        unique: False
+        output_type: "csv"
+        output_file: "./files/data/output/countries.csv"
+        exclude_tags:
+          label: ["strong"]
+  - name: "hockey"
+    domain: "https://www.scrapethissite.com/"
+    input_file: "./files/data/input/hockey.txt"
+    startup:
+      actions:
+        accept_cookies:
+          type: "click"
+          locator: "cookie button"
+          locator_type: "css selector"
+          wait_interval: 0
+        accept_terms:
+          type: "click"
+          locator: "terms button"
+          locator_type: "css selector"
+          wait_interval: 0
+    interactions:
+      - type: "dropdown"
+        locator: ".form-control.col-md-3"
+        locator_type: "css selector"
+        wait_interval: 2
+        option_text: "100"
+    extractions: 
+      - type: "table"
+        locator: "table.table"
+        locator_type: "css selector"
+        wait_interval: 2
+        pagination_locator: 'ul.pagination'
+        pagination_locator_type: 'css selector'
+        output_type: "csv" 
+        output_file: "./files/data/output/hockey.csv"

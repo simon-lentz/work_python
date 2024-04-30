@@ -1,0 +1,60 @@
+Logging:
+  log_directory: "./files/logs"
+  log_level: "INFO"
+  log_format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  log_max_size: "1GB"
+
+Proxy:
+  input_file: ./files/proxies/proxy_pool.txt
+  test_url: "https://httpbin.org/ip"
+  usage_limit: 500
+  validation: True
+  proxy_type: "HTTP"
+
+Docker:
+  ports: [4444, 4445]
+  container_shm_size: "2g"
+  container_image: "seleniarm/standalone-firefox:latest"
+  remove_on_cleanup: True
+  environment:
+    TZ: "Europe/Berlin"
+  network_mode: "bridge"
+  resource_limits:
+    cpu_quota: "0.5"
+    memory_limit: "1g"
+
+Driver:
+  host_network: "http://localhost"
+  option_args: ["--headless", "--width=1920", "--height=1080"]
+  proxy: True
+  retry_attempts: 3
+  retry_interval: 2
+  user_agent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.3"
+
+Target:
+  - name: "bonds_ak"
+    domain: "https://emma.msrb.org/IssueView/Details/SS403299"
+    composite: True
+    input_file: "./files/data/input/bonds/ak_issues.txt"
+    input_data: True
+    startup:
+      - type: "click"
+        locator: "acceptId"
+        locator_type: "id"
+        wait_interval: 2      
+      - type: "click"
+        locator: "ctl00_mainContentArea_disclaimerContent_yesButton"
+        locator_type: "id"
+        wait_interval: 2
+    extractions:
+      - type: "issue scale table"
+        locator: "dtSecurities"
+        locator_type: "id"
+        wait_interval: 2
+        pagination_locator: "div.dataTables_paginate.paging_full_numbers"
+        pagination_locator_type: "css_selector"
+        output_type: "csv" 
+        output_file: "./files/data/output/bonds/ak_bonds.csv"
+        exclude_tags:
+          th: [tabindex]
+        invalid_output: ["No data available in table"]

@@ -45,12 +45,35 @@ type StateIssuer {
     --> ISSUES_IN (one:one) State
 }
 
+type OtherIssuer {
+    issuerName String
+    issuerHomepage String
+    msrbIssuerType String
+    issuerID String primary
+    dateRetrieved String
+    cbsaCode String primary
+    cbsaTitle String
+    csaTitle String
+    metroDivisionTitle String
+    stateAbbreviation String
+    stateFIPS String
+    countyName String
+    countyFIPS String
+
+    --> TYPE_OF (one:one) Issuer
+    --> ISSUES_IN (one:one) State
+}
+
 type CountyIssuer {
     issuerName String
     issuerHomepage String
     msrbIssuerType String
     issuerID String primary
     dateRetrieved String
+    cbsaCode String primary
+    cbsaTitle String
+    csaTitle String
+    metroDivisionTitle String
     stateAbbreviation String
     stateFIPS String
     countyName String
