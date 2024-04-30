@@ -3,6 +3,7 @@
 
 # DB
 neo4j/data
+rdata/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
