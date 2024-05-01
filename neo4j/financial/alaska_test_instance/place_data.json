@@ -1,0 +1,412 @@
+{
+    "States":
+[
+      {
+        "stateFIPS": "02",
+        "stateName": "Alaska"
+      }
+],
+
+  "Counties":
+[
+    {
+        "LOCATED_IN_State": {
+          "Where": {
+            "stateFIPS": "02"
+          }
+        },
+        "countyFIPS": "02013",
+        "countyName": "Aleutians East Borough",
+        "stateFIPS": "02",
+        "stateName": "Alaska"
+      },
+      {
+        "LOCATED_IN_State": {
+          "Where": {
+            "stateFIPS": "02"
+          }
+        },
+        "countyFIPS": "02016",
+        "countyName": "Aleutians West Census Area",
+        "stateFIPS": "02",
+        "stateName": "Alaska"
+      },
+      {
+        "LOCATED_IN_State": {
+          "Where": {
+            "stateFIPS": "02"
+          }
+        },
+        "countyFIPS": "02020",
+        "countyName": "Anchorage Municipality",
+        "stateFIPS": "02",
+        "stateName": "Alaska"
+      },
+      {
+        "LOCATED_IN_State": {
+          "Where": {
+            "stateFIPS": "02"
+          }
+        },
+        "countyFIPS": "02050",
+        "countyName": "Bethel Census Area",
+        "stateFIPS": "02",
+        "stateName": "Alaska"
+      },
+      {
+        "LOCATED_IN_State": {
+          "Where": {
+            "stateFIPS": "02"
+          }
+        },
+        "countyFIPS": "02060",
+        "countyName": "Bristol Bay Borough",
+        "stateFIPS": "02",
+        "stateName": "Alaska"
+      },
+      {
+        "LOCATED_IN_State": {
+          "Where": {
+            "stateFIPS": "02"
+          }
+        },
+        "countyFIPS": "02065",
+        "countyName": "Chugach Census Area",
+        "stateFIPS": "02",
+        "stateName": "Alaska"
+      },
+      {
+        "LOCATED_IN_State": {
+          "Where": {
+            "stateFIPS": "02"
+          }
+        },
+        "countyFIPS": "02069",
+        "countyName": "Copper River Census Area",
+        "stateFIPS": "02",
+        "stateName": "Alaska"
+      },
+      {
+        "LOCATED_IN_State": {
+          "Where": {
+            "stateFIPS": "02"
+          }
+        },
+        "countyFIPS": "02068",
+        "countyName": "Denali Borough",
+        "stateFIPS": "02",
+        "stateName": "Alaska"
+      },
+      {
+        "LOCATED_IN_State": {
+          "Where": {
+            "stateFIPS": "02"
+          }
+        },
+        "countyFIPS": "02070",
+        "countyName": "Dillingham Census Area",
+        "stateFIPS": "02",
+        "stateName": "Alaska"
+      },
+      {
+        "LOCATED_IN_State": {
+          "Where": {
+            "stateFIPS": "02"
+          }
+        },
+        "countyFIPS": "02090",
+        "countyName": "Fairbanks North Star Borough",
+        "stateFIPS": "02",
+        "stateName": "Alaska"
+      },
+      {
+        "LOCATED_IN_State": {
+          "Where": {
+            "stateFIPS": "02"
+          }
+        },
+        "countyFIPS": "02100",
+        "countyName": "Haines Borough",
+        "stateFIPS": "02",
+        "stateName": "Alaska"
+      },
+      {
+        "LOCATED_IN_State": {
+          "Where": {
+            "stateFIPS": "02"
+          }
+        },
+        "countyFIPS": "02103",
+        "countyName": "Hoonah-Angoon Census Area",
+        "stateFIPS": "02",
+        "stateName": "Alaska"
+      },
+      {
+        "LOCATED_IN_State": {
+          "Where": {
+            "stateFIPS": "02"
+          }
+        },
+        "countyFIPS": "02110",
+        "countyName": "Juneau City and Borough",
+        "stateFIPS": "02",
+        "stateName": "Alaska"
+      },
+      {
+        "LOCATED_IN_State": {
+          "Where": {
+            "stateFIPS": "02"
+          }
+        },
+        "countyFIPS": "02122",
+        "countyName": "Kenai Peninsula Borough",
+        "stateFIPS": "02",
+        "stateName": "Alaska"
+      },
+      {
+        "LOCATED_IN_State": {
+          "Where": {
+            "stateFIPS": "02"
+          }
+        },
+        "countyFIPS": "02130",
+        "countyName": "Ketchikan Gateway Borough",
+        "stateFIPS": "02",
+        "stateName": "Alaska"
+      },
+      {
+        "LOCATED_IN_State": {
+          "Where": {
+            "stateFIPS": "02"
+          }
+        },
+        "countyFIPS": "02150",
+        "countyName": "Kodiak Island Borough",
+        "stateFIPS": "02",
+        "stateName": "Alaska"
+      },
+      {
+        "LOCATED_IN_State": {
+          "Where": {
+            "stateFIPS": "02"
+          }
+        },
+        "countyFIPS": "02155",
+        "countyName": "Kusilvak Census Area",
+        "stateFIPS": "02",
+        "stateName": "Alaska"
+      },
+      {
+        "LOCATED_IN_State": {
+          "Where": {
+            "stateFIPS": "02"
+          }
+        },
+        "countyFIPS": "02164",
+        "countyName": "Lake and Peninsula Borough",
+        "stateFIPS": "02",
+        "stateName": "Alaska"
+      },
+      {
+        "LOCATED_IN_State": {
+          "Where": {
+            "stateFIPS": "02"
+          }
+        },
+        "countyFIPS": "02170",
+        "countyName": "Matanuska-Susitna Borough",
+        "stateFIPS": "02",
+        "stateName": "Alaska"
+      },
+      {
+        "LOCATED_IN_State": {
+          "Where": {
+            "stateFIPS": "02"
+          }
+        },
+        "countyFIPS": "02180",
+        "countyName": "Nome Census Area",
+        "stateFIPS": "02",
+        "stateName": "Alaska"
+      },
+      {
+        "LOCATED_IN_State": {
+          "Where": {
+            "stateFIPS": "02"
+          }
+        },
+        "countyFIPS": "02185",
+        "countyName": "North Slope Borough",
+        "stateFIPS": "02",
+        "stateName": "Alaska"
+      },
+      {
+        "LOCATED_IN_State": {
+          "Where": {
+            "stateFIPS": "02"
+          }
+        },
+        "countyFIPS": "02188",
+        "countyName": "Northwest Arctic Borough",
+        "stateFIPS": "02",
+        "stateName": "Alaska"
+      },
+      {
+        "LOCATED_IN_State": {
+          "Where": {
+            "stateFIPS": "02"
+          }
+        },
+        "countyFIPS": "02189",
+        "countyName": "Petersburg Borough",
+        "stateFIPS": "02",
+        "stateName": "Alaska"
+      },
+      {
+        "LOCATED_IN_State": {
+          "Where": {
+            "stateFIPS": "02"
+          }
+        },
+        "countyFIPS": "02201",
+        "countyName": "Prince of Wales-Hyder Census Area",
+        "stateFIPS": "02",
+        "stateName": "Alaska"
+      },
+      {
+        "LOCATED_IN_State": {
+          "Where": {
+            "stateFIPS": "02"
+          }
+        },
+        "countyFIPS": "02220",
+        "countyName": "Sitka City and Borough",
+        "stateFIPS": "02",
+        "stateName": "Alaska"
+      },
+      {
+        "LOCATED_IN_State": {
+          "Where": {
+            "stateFIPS": "02"
+          }
+        },
+        "countyFIPS": "02231",
+        "countyName": "Skagway Municipality",
+        "stateFIPS": "02",
+        "stateName": "Alaska"
+      },
+      {
+        "LOCATED_IN_State": {
+          "Where": {
+            "stateFIPS": "02"
+          }
+        },
+        "countyFIPS": "02240",
+        "countyName": "Southeast Fairbanks Census Area",
+        "stateFIPS": "02",
+        "stateName": "Alaska"
+      },
+      {
+        "LOCATED_IN_State": {
+          "Where": {
+            "stateFIPS": "02"
+          }
+        },
+        "countyFIPS": "02280",
+        "countyName": "Wrangell City and Borough",
+        "stateFIPS": "02",
+        "stateName": "Alaska"
+      },
+      {
+        "LOCATED_IN_State": {
+          "Where": {
+            "stateFIPS": "02"
+          }
+        },
+        "countyFIPS": "02282",
+        "countyName": "Yakutat City and Borough",
+        "stateFIPS": "02",
+        "stateName": "Alaska"
+      },
+      {
+        "LOCATED_IN_State": {
+          "Where": {
+            "stateFIPS": "02"
+          }
+        },
+        "countyFIPS": "02290",
+        "countyName": "Yukon-Koyukuk Census Area",
+        "stateFIPS": "02",
+        "stateName": "Alaska"
+      }
+],
+
+    "Cities":
+[
+    {
+        "LOCATED_IN_County": {
+          "Where": {
+            "countyFIPS": "02020"
+          }
+        },
+        "cbsaCode": "11260",
+        "cbsaTitle": "Anchorage, AK",
+        "countyFIPS": "02020",
+        "countyName": "Anchorage Municipality",
+        "stateFIPS": "02",
+        "stateName": "Alaska"
+      },
+      {
+        "LOCATED_IN_County": {
+          "Where": {
+            "countyFIPS": "02170"
+          }
+        },
+        "cbsaCode": "11260",
+        "cbsaTitle": "Anchorage, AK",
+        "countyFIPS": "02170",
+        "countyName": "Matanuska-Susitna Borough",
+        "stateFIPS": "02",
+        "stateName": "Alaska"
+      },
+      {
+        "LOCATED_IN_County": {
+          "Where": {
+            "countyFIPS": "02090"
+          }
+        },
+        "cbsaCode": "21820",
+        "cbsaTitle": "Fairbanks-College, AK",
+        "countyFIPS": "02090",
+        "countyName": "Fairbanks North Star Borough",
+        "stateFIPS": "02",
+        "stateName": "Alaska"
+      },
+      {
+        "LOCATED_IN_County": {
+          "Where": {
+            "countyFIPS": "02110"
+          }
+        },
+        "cbsaCode": "27940",
+        "cbsaTitle": "Juneau, AK",
+        "countyFIPS": "02110",
+        "countyName": "Juneau City and Borough",
+        "stateFIPS": "02",
+        "stateName": "Alaska"
+      },
+      {
+        "LOCATED_IN_County": {
+          "Where": {
+            "countyFIPS": "02130"
+          }
+        },
+        "cbsaCode": "28540",
+        "cbsaTitle": "Ketchikan, AK",
+        "countyFIPS": "02130",
+        "countyName": "Ketchikan Gateway Borough",
+        "stateFIPS": "02",
+        "stateName": "Alaska"
+      }                  
+]
+}

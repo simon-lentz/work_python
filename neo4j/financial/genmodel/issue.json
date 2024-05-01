@@ -9,14 +9,14 @@
       "officialStatement":"Official Statement",
       "dateRetrieved":"Date Retrieved",
       "issuerName":"Issuer Name",
-      "issuerID":"MSRB Issuer Identifier",
+      "msrbIssuerIdentifier":"MSRB Issuer Identifier",
       "stateAbbreviation":"State Abbreviation",
       "stateFIPS":"State FIPS"
     },
     "association_map": {
       "ISSUED_BY_Issuer": {
         "where": {
-          "msrbIssuerIdentifier":"MSRB Issuer Identifier"
+          "issuerID":"MSRB Issuer Identifier"
         }
       }
     }

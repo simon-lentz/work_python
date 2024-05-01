@@ -29,29 +29,29 @@ type City {
 }
 
 type Issuer {
-    msrbIssuerIdentifier String primary
+    issuerID String primary
 }
 
 type StateIssuer {
     issuerName String
     issuerHomepage String
-    issuerID String primary
+    msrbIssuerIdentifier String primary
     msrbIssuerType String
     dateRetrieved String
     stateAbbreviation String
     stateFIPS String
 
-    --> TYPE_OF (one:one) Issuer
     --> ISSUES_IN (one:one) State
+    --> TYPE_OF (one:one) Issuer
 }
 
 type OtherIssuer {
     issuerName String
     issuerHomepage String
+    msrbIssuerIdentifier String primary
     msrbIssuerType String
-    issuerID String primary
     dateRetrieved String
-    cbsaCode String primary
+    cbsaCode String
     cbsaTitle String
     csaTitle String
     metroDivisionTitle String
@@ -60,17 +60,17 @@ type OtherIssuer {
     countyName String
     countyFIPS String
 
-    --> TYPE_OF (one:one) Issuer
     --> ISSUES_IN (one:one) State
+    --> TYPE_OF (one:one) Issuer
 }
 
 type CountyIssuer {
     issuerName String
     issuerHomepage String
     msrbIssuerType String
-    issuerID String primary
+    msrbIssuerIdentifier String primary
     dateRetrieved String
-    cbsaCode String primary
+    cbsaCode String
     cbsaTitle String
     csaTitle String
     metroDivisionTitle String
@@ -87,9 +87,9 @@ type CityIssuer {
     issuerName String
     issuerHomepage String
     msrbIssuerType String
-    issuerID String primary
+    msrbIssuerIdentifier String primary
     dateRetrieved String
-    cbsaCode String primary
+    cbsaCode String
     cbsaTitle String
     csaTitle String
     metroDivisionTitle String
@@ -111,7 +111,7 @@ type Issue {
     officialStatement String
     dateRetrieved String
     issuerName String
-    issuerID String
+    msrbIssuerIdentifier String
     stateAbbreviation String
     stateFIPS String
 

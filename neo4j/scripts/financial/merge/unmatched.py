@@ -20,6 +20,14 @@ STATE_LOCATORS = (("AK", "02"), ("MS", "28"), ("AL", "01"), ("MT", "30"), ("AR",
                   ("WY", "56"))
 
 
+'''
+Unmatched/other issuers ASSOCIATED_WITH relationship
+where they can be matched with a city, state, county,
+etc. but not definitively said to be an issuer in that
+place.
+'''
+
+
 # Function to parse dates in the format 'MM/DD/YYYY'
 def parse_dates(date):
     return pd.to_datetime(date, format='%m/%d/%Y')
