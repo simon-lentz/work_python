@@ -1,31 +1,21 @@
 import logging
-from .models import State, County, City
+from .models import Nodes
 
 logger = logging.getLogger("Neo4j ORM")
 
 
-def retrieve_city_nodes() -> list:
+def retrieve_nodes(node_label: str) -> list:
+    label = node_label.upper()
     try:
-        cities = City.nodes.all()
-        return cities
+        # Accessing the node class using .value after checking if the label exists in the enum
+        if label in Nodes.__members__:
+            Node = Nodes[label].value
+            nodes = Node.nodes.all()
+            return nodes
+        else:
+            logger.error(f"Label '{label}' not found in Nodes enum.")
+            return []
     except Exception as e:
-        logger.error(f"Failed to retrieve City nodes: {e}")
-        return []
-
-
-def retrieve_state_nodes() -> list:
-    try:
-        states = State.nodes.all()
-        return states
-    except Exception as e:
-        logger.error(f"Failed to retrieve State nodes: {e}")
-        return []
-
-
-def retrieve_county_nodes() -> list:
-    try:
-        counties = County.nodes.all()
-        return counties
-    except Exception as e:
-        logger.error(f"Failed to retrieve County nodes: {e}")
+        # Improved error logging to capture which label caused the issue
+        logger.error(f"Failed to retrieve nodes for label '{label}': {e}")
         return []

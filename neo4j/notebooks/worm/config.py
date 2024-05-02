@@ -20,9 +20,8 @@ class Neo4jConfig(BaseModel):
     database_name: str = "neo4j"
 
 
-def make_db_connection() -> bool:
+def make_db_connection(server: Neo4jConfig) -> bool:
     try:
-        server = Neo4jConfig()
         config.DATABASE_URL = f"bolt://{server.username}:{server.password}@{server.address}:{server.bolt_port}"
         use_graph_query = f"USE {server.database_name}"
         connected, _ = db.cypher_query(f"{use_graph_query}\nRETURN 'Connection Successful' as message")

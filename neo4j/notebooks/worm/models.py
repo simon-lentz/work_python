@@ -1,4 +1,5 @@
 # neomodel_inspect_database --db bolt://neo4j_username:neo4j_password@localhost:7687 -T yourapp/models.py
+from enum import Enum
 from neomodel import StructuredNode, StringProperty, RelationshipTo, OneOrMore, FloatProperty
 
 
@@ -114,3 +115,14 @@ class Bond(StructuredNode):
     coupon = FloatProperty()
     moodysRating = StringProperty()
     component_of_issue = RelationshipTo("Issue", "COMPONENT_OF_Issue", cardinality=OneOrMore)
+
+
+class Nodes(Enum):
+    CITY = City
+    COUNTY = County
+    STATE = State
+    CITYISSUER = CityIssuer
+    COUNTYISSUER = CountyIssuer
+    STATEISSUER = StateIssuer
+    ISSUE = Issue
+    BOND = Bond
