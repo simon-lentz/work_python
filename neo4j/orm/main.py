@@ -7,7 +7,14 @@ from query.apoc import (
     retrieve_city_nodes, retrieve_county_nodes, retrieve_state_nodes
 )
 
-logger = logging.Logger("neo4j financial")
+# Configure logging
+logger = logging.getLogger("Neo4j ORM")
+logger.setLevel(logging.INFO)
+console_handler = logging.StreamHandler()
+console_handler.setLevel(logging.INFO)
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+console_handler.setFormatter(formatter)
+logger.addHandler(console_handler)
 
 
 def sample_cypher_queries():
@@ -23,7 +30,7 @@ def sample_apoc_queries():
 
 
 def main():
-    if make_db_connection():
+    if make_db_connection(logger):
         sample_cypher_queries()
         sample_apoc_queries()
     else:
