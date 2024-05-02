@@ -1,50 +1,30 @@
-import logging
 from neomodel import db
-from .models import State, County, City
-
-logger = logging.getLogger("Neo4j ORM")
+from .logging import logger
 
 
-def fetch_state_node() -> State:
-    # cypher query to return single state node
-    get_state_node = '''
-    MATCH (n:State)
-    RETURN n as State
-    LIMIT 1;
-    '''
-    # Inflate sample state node to python native object
+def run_query(cypher_query: str) -> tuple:
+    """
+    Executes a Cypher query on the Neo4j database and returns the results along with metadata.
+
+    This function takes a Cypher query string, executes it against the Neo4j database using neomodel's
+    db.cypher_query method, and attempts to resolve returned objects based on the graph models defined.
+    It returns both the results of the query and metadata about the results, such as column names.
+
+    Args:
+        cypher_query (str): The Cypher query string to be executed on the Neo4j database.
+
+    Returns:
+        tuple: A tuple containing two elements; the first is the list of results from the query, and the second
+               is metadata about those results. If an exception occurs, it logs the error and the function
+               returns None.
+
+    Raises:
+        Exception: Logs an error message detailing why the query failed. If an error occurs, None is returned,
+                   highlighting an unsuccessful query execution.
+    """
     try:
-        state_node, _ = db.cypher_query(query=get_state_node, params=None, resolve_objects=True)
-        return state_node
+        results, meta = db.cypher_query(query=cypher_query, params=None, resolve_objects=True)
+        return (results, meta)
     except Exception as e:
-        logger.error(f"Failed to retrieve and parse sample State node: {e}")
-
-
-def fetch_county_node() -> County:
-    # cypher query to return single county node
-    get_county_node = '''
-    MATCH (n:County)
-    RETURN n as County
-    LIMIT 1;
-    '''
-    # Inflate sample county node to python native object
-    try:
-        county_node, _ = db.cypher_query(query=get_county_node, params=None, resolve_objects=True)
-        return county_node
-    except Exception as e:
-        logger.error(f"Failed to retrieve and parse sample County node: {e}")
-
-
-def fetch_city_node() -> City:
-    # cypher query to return single city node
-    get_city_node = '''
-    MATCH (n:City)
-    RETURN n as City
-    LIMIT 1;
-    '''
-    # Inflate sample city node to python native object
-    try:
-        city_node, _ = db.cypher_query(query=get_city_node, params=None, resolve_objects=True)
-        return city_node
-    except Exception as e:
-        logger.error(f"Failed to retrieve and parse sample City node: {e}")
+        logger.error(f"Failed to execute query '{cypher_query}': {e}")
+        return None

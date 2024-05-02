@@ -1,18 +1,19 @@
-import logging
 from pydantic import BaseModel
 from neomodel import db, config
-
-# Configure logging
-logger = logging.getLogger("Neo4j ORM")
-logger.setLevel(logging.INFO)
-console_handler = logging.StreamHandler()
-console_handler.setLevel(logging.INFO)
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-console_handler.setFormatter(formatter)
-logger.addHandler(console_handler)
+from .logging import logger
 
 
 class Neo4jConfig(BaseModel):
+    """
+    Configuration class for Neo4j database connections.
+
+    Attributes:
+        username (str): Username for the Neo4j database.
+        password (str): Password for the Neo4j database.
+        address (str): Host address where the Neo4j database is running.
+        bolt_port (str): Port number for the BOLT protocol.
+        database_name (str): Name of the database to connect to.
+    """
     username: str = "neo4j"
     password: str = "alaskadb"
     address: str = "localhost"
@@ -20,10 +21,25 @@ class Neo4jConfig(BaseModel):
     database_name: str = "neo4j"
 
 
-def make_db_connection(server: Neo4jConfig) -> bool:
+def make_db_connection(neo4j_config: Neo4jConfig) -> bool:
+    """
+    Establish a connection to the Neo4j database using the provided configuration.
+
+    This function constructs the database URL from the provided config, attempts to establish
+    a connection, and logs the outcome.
+
+    Args:
+        neo4j_config (Neo4jConfig): The configuration object containing connection details.
+
+    Returns:
+        bool: True if the connection is successful, False otherwise.
+
+    Raises:
+        Exception: If unable to connect to the database, an exception is logged and None is returned.
+    """
     try:
-        config.DATABASE_URL = f"bolt://{server.username}:{server.password}@{server.address}:{server.bolt_port}"
-        use_graph_query = f"USE {server.database_name}"
+        config.DATABASE_URL = f"bolt://{neo4j_config.username}:{neo4j_config.password}@{neo4j_config.address}:{neo4j_config.bolt_port}"  # noqa:E501
+        use_graph_query = f"USE {neo4j_config.database_name}"
         connected, _ = db.cypher_query(f"{use_graph_query}\nRETURN 'Connection Successful' as message")
         logger.info(connected)
         return True
