@@ -1,6 +1,6 @@
 import logging
 from neomodel import db
-from setup.models import State, County, City
+from .models import State, County, City
 
 logger = logging.getLogger("Neo4j ORM")
 
