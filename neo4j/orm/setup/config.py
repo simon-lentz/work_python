@@ -2,6 +2,15 @@ import logging
 from pydantic import BaseModel
 from neomodel import db, config
 
+# Configure logging
+logger = logging.getLogger("Neo4j ORM")
+logger.setLevel(logging.INFO)
+console_handler = logging.StreamHandler()
+console_handler.setLevel(logging.INFO)
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+console_handler.setFormatter(formatter)
+logger.addHandler(console_handler)
+
 
 class Neo4jConfig(BaseModel):
     username: str = "neo4j"
@@ -11,7 +20,7 @@ class Neo4jConfig(BaseModel):
     database_name: str = "neo4j"
 
 
-def make_db_connection(logger: logging.Logger) -> bool:
+def make_db_connection() -> bool:
     try:
         server = Neo4jConfig()
         config.DATABASE_URL = f"bolt://{server.username}:{server.password}@{server.address}:{server.bolt_port}"

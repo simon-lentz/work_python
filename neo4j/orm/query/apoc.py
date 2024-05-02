@@ -1,7 +1,7 @@
 import logging
 from setup.models import State, County, City
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("Neo4j ORM")
 
 
 def retrieve_city_nodes() -> list:
