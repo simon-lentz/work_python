@@ -14,11 +14,14 @@ class Neo4jConfig(BaseModel):
         bolt_port (str): Port number for the BOLT protocol.
         database_name (str): Name of the database to connect to.
     """
-    username: str = "neo4j"
-    password: str = "alaskadb"
-    address: str = "localhost"
-    bolt_port: str = "7687"
-    database_name: str = "neo4j"
+    username: str
+    password: str
+    address: str
+    bolt_port: str
+    database_name: str
+
+    def __init__(self, username='neo4j', password='neo4j', address='localhost', bolt_port='7687', database_name='neo4j'):  # noqa:E501
+        super().__init__(username=username, password=password, address=address, bolt_port=bolt_port, database_name=database_name)  # noqa:E501
 
 
 def make_db_connection(neo4j_config: Neo4jConfig) -> bool:
