@@ -1,8 +1,0 @@
-{
-  "type": "State",
-  "property_map": {
-    "stateFIPS": "State FIPS",
-    "stateName": "State Name"
-  },
-  "association_map": {}
-}

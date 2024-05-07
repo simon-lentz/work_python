@@ -1,7 +1,0 @@
-{
-    "type": "Issuer",
-    "property_map": {
-        "issuerID":"MSRB Issuer Identifier"
-    },
-    "association_map": {}
-  }
