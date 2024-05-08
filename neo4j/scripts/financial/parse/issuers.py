@@ -13,9 +13,9 @@ setup_logging()
 pd.set_option('mode.chained_assignment', None)
 
 # Constants
-FINANCIAL_DATA_DIR = Path.cwd() / "neo4j" / "financial" / "data"
-PLACE_DATA_DIR = Path.cwd() / "neo4j" / "place" / "data"
-STATE_LOCATORS = (("AK", "02"), ("AL", "01"))
+FINANCIAL_DATA_DIR = Path.cwd() / "neo4j" / "data" / "msrb" / "db"
+PLACE_DATA_DIR = Path.cwd() / "neo4j" / "data" / "place"
+STATE_LOCATORS = (("AK", "02"), ("AL", "01"), ("AR", "05"))
 
 
 # Function to load input state issuer data
