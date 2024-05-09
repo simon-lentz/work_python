@@ -92,7 +92,7 @@ def filter_raw_bonds(bonds_df: pd.DataFrame) -> pd.DataFrame:
 
 def sanitize_raw_bonds(state_abbr: str) -> None:
     logging.info(f"Sanitizing bonds data for {state_abbr}")
-    raw_bonds_file = FINANCIAL_DATA_DIR / state_abbr / "bonds.csv"
+    raw_bonds_file = FINANCIAL_DATA_DIR / state_abbr / "raw_bonds.csv"
     try:
         bonds_df, errors_df = load_and_filter_data(raw_bonds_file)
         if bonds_df is not None:
